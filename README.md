@@ -32,6 +32,7 @@ It builds and packages following main components:
 - [TF-A](https://github.com/ARM-software/arm-trusted-firmware)
 - [ti-linux-firmware](https://git.ti.com/cgit/processor-firmware/ti-linux-firmware)
 - [busybox](https://git.busybox.net/busybox/)
+- cc33xx (cc3351)
 
 ## Pre-built SD card images
 
@@ -68,16 +69,17 @@ information refer
 - Clone the Buildroot repository to local machine.
 
 ```bash
-$ git clone -b 2024.05.3 https://github.com/buildroot/buildroot
+$ wget https://buildroot.org/downloads/buildroot-2024.05.3.tar.gz
+$ tar xf ./buildroot-2024.05.3.tar.gz
 ```
 
 - Clone the `BR2_EXTERNAL` tree:
 
 ```bash
-$ git clone -b 10.01.10.04 https://github.com/TexasInstruments/buildroot-external-TI.git
+$ git clone https://github.com/lowson63/buildroot-external-TI-10.01.10.04.git
 ```
 
-- The directories for `buildroot` and `buildroot-external-ti` are now located
+- The directories for `buildroot` and `buildroot-external-TI-10.01.10.04` are now located
 side-by-side.
 
 ### Configure and build
@@ -85,7 +87,7 @@ side-by-side.
 - Go to the Buildroot directory:
 
 ```bash
-$ cd buildroot/
+$ cd buildroot-2024.05.3/
 ```
 
 - Configure Buildroot to use the external tree by setting the BR2_EXTERNAL environment
@@ -95,10 +97,10 @@ choose any of the *defconfigs*  provided in this `BR2_EXTERNAL` tree. For exampl
 
 ```bash
 # For AM62X Linux
-$ make BR2_EXTERNAL=../buildroot-external-TI ti_release_am62x_sk_defconfig
+$ make BR2_EXTERNAL=../buildroot-external-TI-10.01.10.04 ti_release_am62x_sk_defconfig
 
 # For AM62X RT-Linux
-$ make BR2_EXTERNAL=../buildroot-external-TI ti_release_am62x_sk_rt_defconfig
+$ make BR2_EXTERNAL=../buildroot-external-TI-10.01.10.04 ti_release_am62x_sk_rt_defconfig
 ```
 
 - To further customize the Buildroot configuration, run `make menuconfig`. This
@@ -113,6 +115,13 @@ buildroot/ $ make TI_K3_BOOT_FIRMWARE_VERSION=10.01.10
 - This process compiles the necessary components and creates the root filesystem,
 kernel, and bootloader. The build process can take some time, depending on your
 system's resources and the complexity of the configuration.
+
+## Supprt TI CC33xx module
+- Wi-Fi and BLE
+- The folder at board/ti/cc33xx
+- run build_cc33xx.sh to show usage, patch DTS file and kerenl files to support CC33xx 
+- TODO: not test yet
+- TODO: 0001-bluetooth-add-cc33xx-ble-driver-and-debugfs.patch is newer patch?
 
 ## Flashing and booting the SD card image
 
