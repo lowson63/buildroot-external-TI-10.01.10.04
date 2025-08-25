@@ -1,0 +1,36 @@
+#!/usr/bin/expect -f
+
+set timeout -1
+set io_capab [lindex $argv 0]
+puts "*** io_capab: $io_capab ***"
+spawn bluetoothctl --agent=$io_capab
+match_max 100000
+expect -exact "#"
+send -- "default-agent\r"
+expect -exact "#"
+
+while 1 {
+if {$io_capab == "DisplayYesNo"} {
+        expect {
+                "Accept pairing (yes/no):" {
+                        send -- "yes\r"
+                }
+                "Confirm passkey" {
+                        send -- "yes\r"
+                }
+        }
+} elseif {$io_capab == "KeyboardOnly" || $io_capab == "KeyboardDisplay"} {
+        expect {
+                "Enter passkey (number in 0-999999):" {
+                        send -- "123456\r"
+                }
+                "Confirm passkey" {
+                        send -- "yes\r"
+                }
+        }
+}
+
+expect -exact "#"
+}
+
+expect eof
